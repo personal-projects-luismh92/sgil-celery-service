@@ -1,0 +1,2 @@
+common_for_services @ git+https://github.com/personal-projects-luismh92/common_for_services.git@main
+requests==2.26.0
