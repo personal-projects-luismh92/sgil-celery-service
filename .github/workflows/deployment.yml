@@ -6,6 +6,10 @@ on:
       - develop
   workflow_dispatch:  # Allows manual execution from GitHub UI
 
+permissions:
+  id-token: write  # Required for OIDC authentication
+  contents: read   # Read access for the repo
+
 jobs:
   push-to-ecr:
     runs-on: ubuntu-latest
@@ -14,12 +18,11 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Configure AWS Credentials
+      - name: Configure AWS Credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1  # Change this to your AWS region
+          role-to-assume: arn:aws:iam::996241846882:role/SGIL-GitHub-OIDC-Role
+          aws-region: us-east-1  
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -29,7 +32,7 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: sgil-celery-service # Replace with your ECR repository name
-          IMAGE_TAG: latest
+          IMAGE_TAG: ${{ github.sha }}  # Use commit SHA for versioning
         run: |
           set -e  # Exit on failure
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
