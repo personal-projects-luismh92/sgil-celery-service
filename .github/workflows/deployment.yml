@@ -34,7 +34,7 @@ jobs:
           ECR_REPOSITORY: sgil-celery-service # Replace with your ECR repository name
           IMAGE_TAG: ${{ github.sha }}  # Use commit SHA for versioning
         run: |
-          set -e  # Exit on failure
+          set -e
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
