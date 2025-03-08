@@ -45,7 +45,7 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
 
       - name: Output Image URI
-        run: echo "Pushed Docker image: $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+        run: echo "Pushed Docker image:$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: sgil-celery-service
