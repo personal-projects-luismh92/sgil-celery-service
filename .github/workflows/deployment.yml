@@ -31,12 +31,20 @@ jobs:
       - name: Build, Tag, and Push Docker Image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: sgil-celery-service # Replace with your ECR repository name
-          IMAGE_TAG: ${{ github.sha }}  # Use commit SHA for versioning
+          ECR_REPOSITORY: sgil-celery-service
+          IMAGE_TAG: ${{ github.sha }}
         run: |
-          set -e
+          set -ex
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
+          # Tag and push as latest
+          docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+
       - name: Output Image URI
-        run: echo "Pushed Docker image: ${{ steps.login-ecr.outputs.registry }}/sgil-celery-service:latest"
+        run: echo "Pushed Docker image: $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: sgil-celery-service
+          IMAGE_TAG: ${{ github.sha }}
