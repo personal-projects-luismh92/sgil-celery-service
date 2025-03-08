@@ -3,7 +3,8 @@ name: CI/Push Docker Image to ECR
 on:
   push:
     branches:
-      - main
+      - develop
+  workflow_dispatch:  # Allows manual execution from GitHub UI
 
 jobs:
   push-to-ecr:
