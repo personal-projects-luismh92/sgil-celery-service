@@ -15,20 +15,17 @@ spec:
       containers:
         - name: celery-worker
           image: 996241846882.dkr.ecr.us-east-1.amazonaws.com/sgil-celery-service:latest
-          command: 
-            - "celery"
-            - "-A"
-            - "celery_worker.celery_config.celery"
-            - "worker"
-            - "--loglevel=info"
-            - "--concurrency=4"
-            - "-Q"
-            - "email_queue,logging_queue"
-          env:
-            - name: CELERY_BROKER_URL
-              value: 'redis://redis-service:6379/0'
-            - name: CELERY_RESULT_BACKEND
-              value: 'redis://redis-service:6379/0'
+          command:
+            - 'celery'
+            - '-A'
+            - 'celery_worker.celery_config.celery'
+            - 'worker'
+            - '--loglevel=info'
+            - '--concurrency=4'
+            - '-Q'
+            - 'email_queue,logging_queue'
+        
 
+  
       imagePullSecrets:
         - name: regcred
