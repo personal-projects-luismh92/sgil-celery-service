@@ -10,6 +10,12 @@ permissions:
   id-token: write  # Required for OIDC authentication
   contents: read   # Read access for the repo
 
+env:
+  AWS_REGION: us-east-1
+  EKS_CLUSTER_NAME: miso-eks-cluster
+  ECR_REPOSITORY: sgil-celery-service  # Ensure this ECR repo exists
+  IMAGE_TAG: latest
+
 jobs:
   push-to-ecr:
     runs-on: ubuntu-latest
