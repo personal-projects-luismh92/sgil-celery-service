@@ -51,3 +51,20 @@ jobs:
           ECR_REPOSITORY: sgil-celery-service
           IMAGE_TAG: latest
 
+      - name: Update Kubeconfig
+        run: aws eks update-kubeconfig --region $AWS_REGION --name $EKS_CLUSTER_NAME
+    
+      - name: Deploy to EKS
+        run: |
+            if [ -d "k8s" ]; then
+              echo "Applying Kubernetes manifests..."
+              kubectl apply -f k8s/deployment.yaml && \
+              kubectl apply -f k8s/service.yaml && \
+              echo "Restarting deployment..."
+              kubectl rollout restart deployment usuarios-service
+  
+            else
+              echo "Error: Kubernetes directory 'k8s' not found."
+              exit 1
+            fi
+

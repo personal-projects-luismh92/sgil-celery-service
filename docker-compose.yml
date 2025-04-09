@@ -39,8 +39,8 @@ services:
  
 
   flower:
-    build: .
-    command: celery -A celery_worker.celery_config.celery flower --broker=redis://redis:6379/0
+    image: mher/flower
+    container_name: flower
     environment:
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
@@ -51,7 +51,7 @@ services:
         condition: service_healthy
       celery-worker:
         condition: service_healthy
-    
+    restart: unless-stopped
     networks:
       - sgil_network
 
