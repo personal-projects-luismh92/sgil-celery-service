@@ -68,10 +68,13 @@ jobs:
         run: |
             if [ -d "k8s" ]; then
               echo "Applying Kubernetes manifests..."
-              kubectl apply -f k8s/deployment.yaml && \
+              export SMTP_USERNAME=$SMTP_USERNAME
+              export SMTP_PASSWORD=$SMTP_PASSWORD
+              export ADMIN_EMAIL=$ADMIN_EMAIL
+              envsubst < k8s/deployment.yaml | kubectl apply -f - && \
               kubectl apply -f k8s/service.yaml && \
               echo "Restarting deployment..."
-              kubectl rollout restart deployment usuarios-service
+              kubectl rollout restart deployment celery
   
             else
               echo "Error: Kubernetes directory 'k8s' not found."
